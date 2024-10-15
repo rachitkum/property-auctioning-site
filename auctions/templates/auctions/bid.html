@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Listing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            margin: 10px 0;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .time-left {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        form input[type="number"],
+        form input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            padding: 10px 20px;
+            border: none;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #ff4400;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .highest-bid {
+            color: red;
+            font-weight: bold;
+        }
+
+        .starting-bid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .image-preview img {
+            max-width: 400px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .listing-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .listing-card {
+            position: relative;
+            flex: 1 0 540px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .listing-card img {
+            display: none;
+            width: 100%;
+            height: 415px;
+            object-fit: cover;
+            border-radius: 5px 5px 0 0;
+            transition: transform 0.3s;
+        }
+
+        .listing-card img:first-child {
+            display: block;
+        }
+
+        .listing-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 20px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+
+        .listing-card:hover .slider-button {
+            opacity: 1;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .view-bid-button:hover {
+            background-color: #ff4400;
+            color: white;
+        }
+
+        .slider-button.left {
+            left: 10px;
+        }
+
+        .slider-button.right {
+            right: 10px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ listing.title }}</h1>
+        <p><strong>Highest Bid:</strong> <span class="highest-bid">₹ {{ listing.current_bid }}</span></p>
+        <p><strong>Starting Bid:</strong> <span class="starting-bid">₹ {{ listing.starting_bid }}</span></p>
+        <p><strong>Address:</strong> {{ listing.address }}</p>
+        <p><strong>Size:</strong> {{ listing.size }} sq ft</p>
+        <p><strong>Year Built:</strong> {{ listing.year_built }}</p>
+        <h3>Tags:</h3>
+        <div class="tags-container">
+            {% for tag in tags %}
+                <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        
+        <h3>Photos:</h3>
+        <div class="listing-card">
+            {% for image in listing.images.all %}
+                <img src="{{ image.image.url }}" alt="Listing Image" class="listing-image">
+            {% endfor %}
+            <div class="slider-button left" onclick="prevImage(this)">❮</div>
+            <div class="slider-button right" onclick="nextImage(this)">❯</div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="bid_amount">Your Bid Amount:</label>
+            <input type="text" id="bid_amount" name="bid_amount" required>
+            <button type="submit"><strong>Place Bid</strong></button>
+        </form>
+        <h2>Bid History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Bidder Name</th>
+                    <th>Bid Amount</th>
+                    <th>Bid Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bid in bids %}
+                    <tr>
+                        <td>{{ bid.bidder.username }}</td>
+                        <td>₹{{ bid.bid_amount }}</td>
+                        <td>{{ bid.bid_time }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No bids yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function prevImage(button) {
+            let container = button.closest('.listing-card');
+            let images = container.querySelectorAll('.listing-image');
+            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
+            images[visibleIndex].style.display = 'none';
+            visibleIndex = (visibleIndex - 1 + images.length) % images.length;
+            images[visibleIndex].style.display = 'block';
+        }
+
+        function nextImage(button) {
+            let container = button.closest('.listing-card');
+            let images = container.querySelectorAll('.listing-image');
+            let visibleIndex = Array.from(images).findIndex(img => img.style.display === 'block');
+            images[visibleIndex].style.display = 'none';
+            visibleIndex = (visibleIndex + 1) % images.length;
+            images[visibleIndex].style.display = 'block';
+        }
+
+        document.getElementById('bid_amount').addEventListener('input', function(evt) {
+            let value = evt.target.value.replace(/[,₹]/g, '');
+            if (!isNaN(value)) {
+                value = parseFloat(value).toLocaleString('en-IN');
+                evt.target.value = '₹ ' + value;
+            }
+        });
+    </script>
+</body>
+</html>

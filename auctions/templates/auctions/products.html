@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Listings</title>
+    <style>
+        body {
+            text-align: center; /* Center the title */
+        }
+
+        .listing-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around; /* Adjust as needed */
+        }
+
+        .listing-card {
+            position: relative; /* Make the card container relative */
+            flex: 1 0 540px; /* Adjust card width as needed */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 15px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Hide overflow for the slider button */
+        }
+
+        .listing-card img {
+            display: none; /* Hide all images initially */
+            width: 100%;
+            height: 415px; /* Fixed height for the image */
+            object-fit: cover; /* Maintain aspect ratio */
+            border-radius: 5px 5px 0 0; /* Rounded corners only at the top */
+            transition: transform 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .listing-card img:first-child {
+            display: block; /* Show only the first image initially */
+        }
+
+        .listing-card:hover img {
+            transform: scale(1.05); /* Enlarge image on hover */
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 20px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.3s; /* Smooth transition for hover effect */
+            opacity: 0; /* Initially hidden */
+        }
+
+        .listing-card:hover .slider-button {
+            opacity: 1; /* Show button on hover */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center the button horizontally */
+            padding: 15px;
+        }
+
+        .view-bid-button {
+            width: 100%; /* Make the button full width */
+            height: 60px; /* Increase height */
+            box-sizing: border-box; /* Include padding and border in the button's total width */
+            background-color: black; /* Normal background color */
+            color: white; /* Normal text color */
+            font-size: 1.5em; /* Increase font size */
+            font-weight: bold; /* Make text bold */
+            text-align: center; /* Center text horizontally */
+            line-height: 60px; /* Center text vertically */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+            text-decoration: none; /* Remove underline */
+        }
+
+        .view-bid-button:hover {
+            background-color: #ff4400; /* Hover background color */
+            color: white; /* Hover text color */
+        }
+        .slider-button.left {
+    left: 10px;
+}
+
+    .slider-button.right {
+    right: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <h1>All Listings</h1>
+    <div class="listing-container">
+        {% for listing in listings %}
+            <div class="listing-card">
+                {% for image in listing.images.all %}
+                    <img src="{{ image.image.url }}" alt="Listing Image" class="listing-image">
+                {% endfor %}
+                <div class="slider-button left" onclick="prevImage(this)">❮</div>
+                <div class="slider-button right" onclick="nextImage(this)">❯</div>
+                <div class="button-container">
+                    <a href="{% url 'bid' listing.id %}" class="view-bid-button">View and Bid</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No listings available.</p>
+        {% endfor %}
+    </div>
+    <a href="{% url 'create' %}">Create New Listing</a>
+
+    <script>
+        function nextImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const nextIndex = (currentIndex + 1) % images.length;
+
+            images[currentIndex].style.display = 'none';
+            images[nextIndex].style.display = 'block';
+        }
+
+        function prevImage(button) {
+            const card = button.parentNode;
+            const images = card.querySelectorAll('.listing-image');
+            const currentIndex = Array.from(images).findIndex(img => img.style.display !== 'none');
+            const prevIndex = (currentIndex - 1 + images.length) % images.length;
+
+            images[currentIndex].style.display = 'none';
+            images[prevIndex].style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Listing</title>
+    <style>
+        path {
+            transform-origin: 50% 0%;
+        }
+        .background--custom {
+            background-color: #FFFFFF;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            top: 0;
+            left: 0;
+        }
+        @keyframes path0 {
+            0% {
+                transform: rotate(-10deg);
+            }
+            100% {
+                transform: rotate(10deg);
+            }
+        }
+        @keyframes path1 {
+            0% {
+                transform: rotate(-30deg);
+            }
+            100% {
+                transform: rotate(30deg);
+            }
+        }
+        @keyframes path2 {
+            0% {
+                transform: rotate(40deg);
+            }
+            100% {
+                transform: rotate(-40deg);
+            }
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+    
+        .form-group {
+            margin-bottom: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-column-gap: 10px;
+        }
+    
+        .custom-file-upload {
+            height: 20px;
+            background-color: white;
+        }
+
+        .submit-button {
+            width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+    
+        label {
+            display: block;
+            font-weight: bold;
+        }
+    
+        input[type=text],
+        input[type=number],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    
+        textarea {
+            height: 80px;
+            resize: none;
+        }
+    
+        .submit-button {
+            background-color: #000;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: block;
+            margin: 0 auto;
+        }
+    
+        .submit-button:hover {
+            background-color: #FF4400;
+            color: #000;
+        }
+    
+        .back-link {
+            color: #065fd4;
+            text-decoration: none;
+        }
+    
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    
+        #imagePreview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 0.6em 2em;
+            border: 1px solid white;
+            background-color: white;
+            outline: none;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .custom-file-upload:before {
+            content: "";
+            background: linear-gradient(
+                45deg,
+                #ff0000,
+                #ff7300,
+                #fffb00,
+                #48ff00,
+                #00ffd5,
+                #002bff,
+                #7a00ff,
+                #ff00c8,
+                #ff0000
+            );
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(5px);
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            border-radius: 10px;
+        }
+
+        .custom-file-upload:hover:before {
+            opacity: 1;
+        }
+
+        .custom-file-upload:active {
+            color: #000;
+        }
+
+        .custom-file-upload:after {
+            z-index: -1;
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #191919;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+        }
+
+        .button-55 {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .button-55:hover {
+            box-shadow: rgb(255, 255, 255) 2px 8px 8px -5px;
+            transform: translate3d(0, 2px, 0);
+        }
+
+        .button-55:focus {
+            box-shadow: rgb(255, 255, 255) 2px 8px 4px -6px;
+        }
+    </style>
+</head>
+<body>
+    <svg class="background--custom" id="demo" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path fill="#FF4400" fill-opacity="0.7" d="M-100 -100L200 -100L200 70L-100 70Z" style="animation: path0 5s linear infinite alternate;" />
+        <path fill="#FF4400" fill-opacity="0.7" d="M-100 -100L200 -100L200 50L-100 50Z" style="animation: path1 12.5s linear infinite alternate;" />
+        <path fill="#FF4400" fill-opacity="0.2" d="M-100 -100L200 -100L200 70L-100 70Z" style="animation: path2 30s linear infinite alternate;" />
+    </svg>
+    <div class="container">
+        <h2>Create New Listing!!!</h2>
+        <form method="post" enctype="multipart/form-data" class="listing-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title of the Property:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required maxlength="100" style="resize: none;"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="starting_bid">Starting Bid:</label>
+                <input type="text" id="starting_bid" name="starting_bid" pattern="\d{4,}" title="Please enter a number with at least four digits" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="size">Property Size:</label>
+                <input type="text" id="size" name="size" required>
+            </div>
+            <div class="form-group">
+                <label for="year_built">Year Built:</label>
+                <input type="number" id="year_built" name="year_built" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="tags">Tags:</label>
+                <input type="text" id="tags-input">
+                <div id="tags-container"></div>
+                <input type="hidden" id="tags" name="tags">
+            </div>
+    
+            <div class="form-group">
+                <h3>Upload Photos</h3>
+                <label for="images" class="custom-file-upload">Choose File</label>
+                <input type="file" id="images" name="images" accept="image/*" multiple onchange="previewImages(event)" style="display: none;">
+                <div id="imagePreview"></div>
+            </div>
+    
+            <button type="submit" class="submit-button">Create</button>
+        </form>
+        <a href="{% url 'products' %}" class="button-55">Back</a>
+    </div>
+    
+    <script>
+        function previewImages(event) {
+            const imagePreviewContainer = document.getElementById('imagePreview');
+            imagePreviewContainer.innerHTML = ''; // Clear previous previews
+
+            const files = event.target.files;
+            if (files.length > 0) {
+                for (const file of files) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        imagePreviewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tagsInput = document.getElementById('tags-input');
+            const tagsContainer = document.getElementById('tags-container');
+            const hiddenTagsInput = document.getElementById('tags');
+
+            tagsInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const tagText = tagsInput.value.trim();
+                    if (tagText !== '') {
+                        addTag(tagText);
+                        tagsInput.value = '';
+                    }
+                }
+            });
+
+            function addTag(text) {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = text;
+
+                const removeButton = document.createElement('button');
+                removeButton.className = 'remove-tag';
+                removeButton.innerHTML = '&times;';
+                removeButton.addEventListener('click', function() {
+                    tag.remove();
+                    updateHiddenTagsInput();
+                });
+
+                tag.appendChild(removeButton);
+                tagsContainer.appendChild(tag);
+                updateHiddenTagsInput();
+            }
+
+            function updateHiddenTagsInput() {
+                const tags = [];
+                tagsContainer.querySelectorAll('.tag').forEach(function(tagElement) {
+                    tags.push(tagElement.textContent.slice(0, -1)); // Remove the '×' symbol
+                });
+                hiddenTagsInput.value = tags.join(',');
+            }
+        });
+    </script>
+</body>
+</html>
