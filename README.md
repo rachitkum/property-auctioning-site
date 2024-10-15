@@ -12,9 +12,7 @@ Bidstake's online presence extends across India, offering nationwide access to l
 - [Satyam](https://github.com/SatyamPote)
 - [Rachitkum](https://github.com/rachitkum)
 - [ahmed](https://github.com/ahmedatk)
-- [anshul](https://github.com/)
-- [senthil](https://github.com/)
-- [guneet](https://github.com/)
+
 
 
 ## [![Typing SVG](https://readme-typing-svg.demolab.com?font=&weight=900&pause=1000&color=FF4400&random=false&width=435&lines=FAQ)](https://git.io/typing-svg)
