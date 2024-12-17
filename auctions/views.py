@@ -72,7 +72,7 @@ def logout_view(request):
 #     else:
 #         return render(request, "auctions/register.html")
 
-API_KEY = 'ce3c32f7-2037-11ef-8b60-0200cd936042'
+API_KEY = '#'
 
 
 def register(request):
